@@ -1,0 +1,6 @@
+# Format-String Vulnerability Tester
+This was a very fractured development, but leaker_v2 uses pwntools in python and is significantly better than parser or the first version of leaker.
+
+Both versions of leaker will attempt to send a generic %1$p payload to the supplied binary to read the first value off the stack, it then pulls the memory mapping of that process (after it has fully loaded libc and other libraries) from /proc/{PID}/maps and checks if the value that the binary leaks is in a named section and will appropriately notate it. Leaker will then repeat this process until it hits the user-defined stop limit, specified in the command-line args (a stop of 300 typically covers everything on the stack in most simple programs).
+
+Parser is an attempt at "static" analysis by producing a linear chain of %p's (separated by '.'), letting the user copy+paste this payload into the binary, then supply the output of the binary and their own copy of /proc/{PID}/maps. Parser can interpret these two files in a similar way to leaker and identify the interesting values. The downside of using this method is that the payload is often too long to accurately preserve the stack for leaking %{NUM}$p offsets.
